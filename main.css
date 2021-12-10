@@ -233,14 +233,6 @@ div.content-border::after {
     position: relative;
 }
 
-.patch-change-block .reference-link {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 10.714285714285715%;
-    min-width: 60px;
-}
-
 .patch-change-block .reference-link+.removed, .patch-change-block .reference-link+.updated, .patch-change-block .reference-link+.new {
     margin-top: 21px;
     margin-right: 7px;
@@ -385,20 +377,10 @@ div.content-border::after {
         margin-right: 3.5714285714285716%;
     }
 
-
-    .patch-change-block .reference-link {
-        display: block;
-        position: relative;
-    }
-
     .patch-change-block .reference-link+.removed, .patch-change-block .reference-link+.updated, .patch-change-block .reference-link+.new {
         margin-top: 21px;
         margin-right: 7px;
         margin-left: 0px;
-    }
-
-    .patch-change-block .reference-link img {
-        width: 60px;
     }
 
     .patch-change-block .change-title, .patch-change-block .summary {
@@ -453,12 +435,9 @@ div.content-border::after {
     position: relative;
 }
 
-.patch-change-block .reference-link {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 10.714285714285715%;
-    min-width: 60px;
+.reference-link{
+    width: 120px;
+    min-width: 120px;
 }
 
 .patch-change-block .reference-link+.removed,

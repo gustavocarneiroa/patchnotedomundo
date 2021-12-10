@@ -58,18 +58,26 @@
 			<div class="content-border">
 				<div class="patch-change-block white-stone accent-before">
 					<div>
-						<a class="reference-link"><img class="characterImg" :src="imgUrl"></a>
-						<h3 class="change-title"><a href=""> {{ characterName }} </a></h3>
-						<p class="summary" v-html="summary"></p>
+						<div style="display: flex; flex-direction: row;">
+							<a class="reference-link"><img class="characterImg" :src="imgUrl"></a>
+							<div style="display: flex; flex-direction: column;">
+								<h3 class="change-title"><a href=""> {{ characterName }} </a></h3>
+								<p class="summary" v-html="summary"></p>
+							</div>
+						</div>
 						<blockquote class="blockquote context" v-html="quote" style="text-align: justify;">
 						</blockquote>
 						<hr class="divider">
 						<h4 class="change-detail-title" style="margin-left: 14.285714285714286%;">ATUALIZAÇÕES</h4>
 						<div v-if="!attributes.length" class="attribute-change">
-							<span class="attribute"><span class="badge new"> NOVO </span> ATRIBUTO DE TESTE</span>
-							<span class="attribute-before"><span>Esse conteúdo aparecerá sempre</span></span>
-							<span class="change-indicator">⇒</span>
-							<span class="attribute-after"><span>Esse conteúdo aparecerá enquanto você não tiver nenhum atributo salvo. Sinta-se a vontade para testar as funções!</span></span>
+							<span class="attribute"><span class="badge new"> NOVO </span> PARA MANDAR NO ZAP</span>
+							<span class="attribute-after"><span>O conteúdo dessa também está acessível em formato de celular!</span></span>
+						</div>
+						<div v-if="!attributes.length" class="attribute-change">
+							<span class="attribute"><span class="badge updated"> ATUALIZADO </span> OUDRI KANDA LARRAI</span>
+							<span class="attribute-before"><span>O conteúdo dessa página está em línguas estranhas</span></span>
+							<span class="change-indicator" >⇒</span>
+							<span class="attribute-after"><span>O conteúdo dessa página está em Português 🇧🇷</span></span>
 						</div>
 						<div class="attribute-change" v-for=" attribute in attributes">
 							<span class="attribute"><span v-if="attribute.status" class="badge" :class="attribute.status"> {{ statuses[attribute.status] }} </span> {{ attribute.attribute ? attribute.attribute.toUpperCase() : ''  }}</span>
