@@ -6,51 +6,98 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Patch Note do mundo</title>
-	<script src="https://cdn.jsdelivr.net/npm/tinymce/tinymce.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/w-tinymce-vue@2.0.1/dist/w-tinymce-vue.umd.js"></script>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
 	<script src="script.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 	<link rel="stylesheet" href="main.css">
 </head>
 
 <body>
-	<div id="app" class="app">
+	<div id="app" class="app container">
 		<header>
 			<h1 style="text-align: center;">Gerador de Patch Notes</h1>
 		</header>
-		<div class="contentMaker">
-			<div>
-				Nome: <br>
-				<input type="text" v-model="characterName"> <br><br>
-	
-				Link da foto (tamanho ideal 120px x 120px): <br>
-				<input type="text" v-model="imgUrl"> <br><br>
-	
-				Sumário: <br>
-				<textarea v-model="summary"></textarea> <br><br>
-	
-				Entre aspas: <br>
-				<textarea v-model="quote"></textarea> <br><br>
+		<div class="contentMaker row">
+			<div class="col-md">
+				<h2>Dados</h2>
+				<label class="form-label">Nome: </label>
+				<input type="text" class="form-control" v-model="characterName">
+
+				<label class="form-label">Link da foto (tamanho ideal 120px x 120px): </label>
+				<input type="text" class="form-control" v-model="imgUrl">
+
+				<label class="form-label">Sumário: </label>
+				<textarea class="form-control" v-model="summary"></textarea>
+
+				<label class="form-label">Entre aspas: </label>
+				<textarea class="form-control" v-model="quote"></textarea>
 
 			</div>
-			<div>
-				<pre>Quantidade total de atributos: {{ attributes.length }}</pre>
-				Novo atributo:<br>
-				<input type="text" v-model="newAttribute.attribute"><br><br>
-				Tipo (selecione "Nenhum" caso não for receber alguma insígnia): <br>
-				<select type="text" v-model="newAttribute.status">
-					<option value="" selected> Nenhum </option>
-					<template v-for="(status, index) of statuses">
-						<option :value="index">{{ status }}</option>
-					</template>
-				</select> <br><br>
-				Antes (deixe em branco caso não tenha um antes): <br>
-				<input type="text" v-model="newAttribute.before"> <br><br>
-	
-				Depois: <br>
-				<input type="text" v-model="newAttribute.after"> <br><br>
+			<div class="col-md">
+				<h2> Atributos <span class="badge rounded-pill bg-primary"> {{ attributes.length }} </span> <button
+						class="btn btn-secondary" v-if="!newAttribute.creating" @click="startNewAttribute"> Novo
+						+</button></h2>
+				<div v-if="newAttribute.creating">
+					<label class="form-label">Novo atributo: </label>
+					<input class="form-control" type="text" v-model="newAttribute.attribute">
+					<label class="form-label">Tipo (selecione "Nenhum" caso não for receber alguma insígnia): </label>
+					<select class="form-select" aria-label="Default select example" type="text"
+						v-model="newAttribute.status">
+						<option value="" selected> Nenhum </option>
+						<template v-for="(status, index) of statuses">
+							<option :value="index">{{ status }}</option>
+						</template>
+					</select>
+					<label class="form-label">Antes (deixe em branco caso não tenha um antes): </label>
+					<input type="text" class="form-control" v-model="newAttribute.before">
 
-				<button @click="saveAttribute">Salvar atributo (essa ação não pode ser desfeita)</button>
+					<label class="form-label">Depois: </label>
+					<input type="text" class="form-control" v-model="newAttribute.after"> <br><br>
+
+					<button class="btn btn-light" @click="saveAttribute">Salvar atributo</button>
+					<button class="btn btn-danger" @click="endAttribute">Cancelar</button>
+				</div>
+				<div v-else>
+					<table class="table table-dark table-striped">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">Atributo</th>
+								<th scope="col">Status</th>
+								<th scope="col">Antes</th>
+								<th scope="col">Depois</th>
+								<th scope="col">Opções</th>
+							</tr>
+						</thead>
+						<tbody>
+							<template>
+								<tr v-for="(attribute, index) in attributes" :key="attribute.id">
+									<th scope="row"> {{ attribute.id }} </th>
+									<td> {{ attribute.attribute }}</td>
+									<td> <span class="badge-status" :class="attribute.status">
+											{{ statuses[attribute.status] || '---' }} </span> </td>
+									<td> {{ attribute.before || '---' }}</td>
+									<td> {{ attribute.after }}</td>
+									<td> 
+										<button class="btn" :disabled="attribute === attributes[0]" @click="swapIndexes(index, index -1 )">
+											<i class="bi bi-arrow-up"></i>
+										</button>
+										
+										<button class="btn" :disabled="attribute === attributes[attributes.length - 1]" @click="swapIndexes(index, index + 1 )">
+											<i class="bi bi-arrow-down"></i>
+										</button>
+
+										<button class="btn" @click="deleteIndex(attribute)">
+											<i class="bi bi-trash"></i>
+										</button>
+									</td>
+								</tr>
+							</template>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 
@@ -65,30 +112,41 @@
 								<p class="summary" v-html="summary"></p>
 							</div>
 						</div>
-						<blockquote class="blockquote context" v-html="quote" style="text-align: justify;">
+						<blockquote class="blockquote context" v-html="quote" style="text-align: justify;margin: 20px">
 						</blockquote>
 						<hr class="divider">
 						<h4 class="change-detail-title" style="margin-left: 14.285714285714286%;">ATUALIZAÇÕES</h4>
 						<div v-if="!attributes.length" class="attribute-change">
-							<span class="attribute"><span class="badge new"> NOVO </span> PARA MANDAR NO ZAP</span>
-							<span class="attribute-after"><span>O conteúdo dessa também está acessível em formato de celular!</span></span>
+							<span class="attribute"><span class="badge-status new"> NOVO </span> PARA MANDAR NO
+								ZAP</span>
+							<span class="attribute-after"><span>O conteúdo dessa página também está acessível em formato de
+									celular!</span></span>
 						</div>
 						<div v-if="!attributes.length" class="attribute-change">
-							<span class="attribute"><span class="badge updated"> ATUALIZADO </span> OUDRI KANDA LARRAI</span>
-							<span class="attribute-before"><span>O conteúdo dessa página está em línguas estranhas</span></span>
-							<span class="change-indicator" >⇒</span>
-							<span class="attribute-after"><span>O conteúdo dessa página está em Português 🇧🇷</span></span>
+							<span class="attribute"><span class="badge-status updated"> ATUALIZADO </span> OUDRI KANDA
+								LARRAI</span>
+							<span class="attribute-before"><span>O conteúdo dessa página está em línguas
+									estranhas</span></span>
+							<span class="change-indicator">⇒</span>
+							<span class="attribute-after"><span>O conteúdo dessa página está em Português
+									🇧🇷</span></span>
 						</div>
 						<div class="attribute-change" v-for=" attribute in attributes">
-							<span class="attribute"><span v-if="attribute.status" class="badge" :class="attribute.status"> {{ statuses[attribute.status] }} </span> {{ attribute.attribute ? attribute.attribute.toUpperCase() : ''  }}</span>
-							<span class="attribute-before" v-if="!!attribute.before"><span v-html="attribute.before"></span></span>
-							<span class="change-indicator"  v-if="!!attribute.before">⇒</span>
+							<span class="attribute"><span v-if="attribute.status" class="badge-status"
+									:class="attribute.status"> {{ statuses[attribute.status] }} </span> {{
+								attribute.attribute ? attribute.attribute.toUpperCase() : '' }}</span>
+							<span class="attribute-before" v-if="!!attribute.before"><span
+									v-html="attribute.before"></span></span>
+							<span class="change-indicator" v-if="!!attribute.before">⇒</span>
 							<span class="attribute-after"><span v-html="attribute.after"></span></span>
 						</div>
 						<div v-if="newAttribute.attribute" class="attribute-change">
-							<span class="attribute"><span v-if="newAttribute.status" class="badge" :class="newAttribute.status"> {{ statuses[newAttribute.status] }} </span> {{ newAttribute.attribute  ? newAttribute.attribute.toUpperCase() : '' }}</span>
-							<span class="attribute-before" v-if="!!newAttribute.before"><span v-html="newAttribute.before"></span></span>
-							<span class="change-indicator"  v-if="!!newAttribute.before">⇒</span>
+							<span class="attribute"><span v-if="newAttribute.status" class="badge-status"
+									:class="newAttribute.status"> {{ statuses[newAttribute.status] }} </span> {{
+								newAttribute.attribute ? newAttribute.attribute.toUpperCase() : '' }}</span>
+							<span class="attribute-before" v-if="!!newAttribute.before"><span
+									v-html="newAttribute.before"></span></span>
+							<span class="change-indicator" v-if="!!newAttribute.before">⇒</span>
 							<span class="attribute-after"><span v-html="newAttribute.after"></span></span>
 						</div>
 					</div>

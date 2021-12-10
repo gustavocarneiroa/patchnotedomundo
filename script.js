@@ -1,14 +1,18 @@
 window.addEventListener("load", function (event) {
-    Vue.component('w-tinymce-vue', window['w-tinymce-vue'])
     new Vue({
         el: '#app',
+        components: {
+            "vue-toastr": window.VueToastr
+        },
         data: {
             newAttribute: {
                 status: '',
                 attribute: '',
                 before: '',
                 after: '',
+                creating: false
             },
+            lastId: 0,
             statuses: {
                 'new': 'Novo',
                 'updated': 'Atualizado',
@@ -22,10 +26,18 @@ window.addEventListener("load", function (event) {
         },
 
         methods: {
+            createId() {
+                this.lastId = this.lastId + 1;
+                return this.lastId;
+            },
+            startNewAttribute() {
+                this.newAttribute.creating = true;
+            },
+
             saveAttribute(){
-                if(this.newAttribute.attribute == '' || this.newAttribute.attribute == '') return alert('Os campos "Novo Atributo" e "Depois" precisam obrigatoriamente serem preenchidos');
-                this.attributes.push({...this.newAttribute});
-                this.clearNewAttribute()
+                if(this.newAttribute.attribute == '' || this.newAttribute.after == '') return alert('Os campos "Novo Atributo" e "Depois" precisam obrigatoriamente serem preenchidos');
+                this.attributes.push({ id: this.createId(), ...this.newAttribute});
+                this.endAttribute()
             },
 
             clearNewAttribute(){
@@ -33,7 +45,27 @@ window.addEventListener("load", function (event) {
                 this.newAttribute.status = ''
                 this.newAttribute.before = ''
                 this.newAttribute.after = ''
+            },
+
+            endAttribute() {
+                this.newAttribute.creating = false;
+                this.clearNewAttribute()
+            },
+
+            swapIndexes(from, to) {
+                const fromArray = this.attributes[from];
+                const toArray = this.attributes[to];
+
+                this.$set(this.attributes, from, toArray);
+                this.$set(this.attributes, to, fromArray);
+
+                return 
+            },
+
+            deleteIndex(index){
+                console.log(this.attributes.indexOf(index))
+                return this.attributes.splice(this.attributes.indexOf(index), 1);
             }
-        }
+        },
     })
 });
