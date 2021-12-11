@@ -108,29 +108,24 @@
 						<div style="display: flex; flex-direction: row;">
 							<a class="reference-link"><img class="characterImg" :src="imgUrl"></a>
 							<div style="display: flex; flex-direction: column;">
-								<h3 class="change-title"><a href=""> {{ characterName }} </a></h3>
-								<p class="summary" v-html="summary"></p>
+								<h3 class="change-title"><a href=""> {{ characterName || standartData.characterName }} </a></h3>
+								<p class="summary" v-html="summary || standartData.summary"></p>
 							</div>
 						</div>
-						<blockquote class="blockquote context" v-html="quote" style="text-align: justify;margin: 20px">
+						<blockquote class="blockquote context" v-html="quote || standartData.quote" style="text-align: justify;margin: 20px">
 						</blockquote>
 						<hr class="divider">
 						<h4 class="change-detail-title" style="margin-left: 14.285714285714286%;">ATUALIZAÇÕES</h4>
-						<div v-if="!attributes.length" class="attribute-change">
-							<span class="attribute"><span class="badge-status new"> NOVO </span> PARA MANDAR NO
-								ZAP</span>
-							<span class="attribute-after"><span>O conteúdo dessa página também está acessível em formato de
-									celular!</span></span>
+						<div v-if="!attributes.length && !newAttribute.creating" v-for="attribute in standartData.attributes" class="attribute-change">
+								<span class="attribute"><span v-if="attribute.status" class="badge-status"
+									:class="attribute.status"> {{ statuses[attribute.status] }} </span> {{
+								attribute.attribute ? attribute.attribute.toUpperCase() : '' }}</span>
+							<span class="attribute-before" v-if="!!attribute.before"><span
+									v-html="attribute.before"></span></span>
+							<span class="change-indicator" v-if="!!attribute.before">⇒</span>
+							<span class="attribute-after"><span v-html="attribute.after"></span></span>
 						</div>
-						<div v-if="!attributes.length" class="attribute-change">
-							<span class="attribute"><span class="badge-status updated"> ATUALIZADO </span> OUDRI KANDA
-								LARRAI</span>
-							<span class="attribute-before"><span>O conteúdo dessa página está em línguas
-									estranhas</span></span>
-							<span class="change-indicator">⇒</span>
-							<span class="attribute-after"><span>O conteúdo dessa página está em Português
-									🇧🇷</span></span>
-						</div>
+
 						<div class="attribute-change" v-for=" attribute in attributes">
 							<span class="attribute"><span v-if="attribute.status" class="badge-status"
 									:class="attribute.status"> {{ statuses[attribute.status] }} </span> {{
