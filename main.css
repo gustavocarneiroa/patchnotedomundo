@@ -295,7 +295,7 @@ div.content-border::after {
 }
 
 .attribute {
-    color: #868686;
+    color: #d0a85c;
 }
 
 .attribute::after {
@@ -565,7 +565,7 @@ hr {
 
 
 .attribute {
-    color: rgb(134, 134, 134);
+    color: #ffd077;
 }
 
 blockquote {
